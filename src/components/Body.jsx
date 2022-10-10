@@ -27,6 +27,9 @@ export default function Body(headerBackground) {
         name: response.data.name,
         description: response.data.description,
         image: response.data.images[0].url,
+        total_song: response.data.tracks.total,
+        display_name: response.data.owner.display_name,
+        follower_like: response.data.followers.total,
         tracks: response.data.tracks.items.map(({ track }) => ({
           id: track.id,
           name: track.name,
@@ -38,7 +41,7 @@ export default function Body(headerBackground) {
           track_number: track.track_number,
         })),
       };
-      dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
+      dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist});
     };
     getInitialPlaylist();
   }, [token, dispatch, selectedPlaylistId]);
@@ -47,6 +50,18 @@ export default function Body(headerBackground) {
     const seconds = ((ms % 60000) / 1000).toFixed(0);
     return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   };
+
+  const sumTime = () => {
+    const sumTimePlayList = selectedPlaylist.tracks.map(({ duration }) => duration);
+    return sumTimePlayList.reduce((partialSum, a) => partialSum + a,0);
+  };
+
+  // const msToHoursMinutesSeconds = (ms) => {
+  //   const minutes = Math.floor(ms / 60000);
+  //   const seconds = ((ms % 60000) / 1000).toFixed(0);
+  //   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  // };
+
   return (
     <Container headerBackground={headerBackground}>
       {selectedPlaylist && (
@@ -59,6 +74,11 @@ export default function Body(headerBackground) {
               <span className="type">PLAYLIST</span>
               <h1 className="title">{selectedPlaylist.name}</h1>
               <p className="description">{selectedPlaylist.description}</p>
+              <p className="infor_react">
+                {selectedPlaylist.display_name} ~{" "}
+                {selectedPlaylist.follower_like} likes ~{" "}
+                {selectedPlaylist.total_song} songs ~ {msToMinutesAndSeconds(sumTime())}
+              </p>
             </div>
           </div>
           <div className="list">
