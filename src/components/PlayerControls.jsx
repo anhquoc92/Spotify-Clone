@@ -14,8 +14,21 @@ import { reducerCases } from "../utils/Constants";
 export default function PlayerControls() {
   const [{ token, playerState }, dispatch] = useStateProvider();
   const changeTrack = async (type) => {
+    const getIdDevice = await axios.get(
+      "https://api.spotify.com/v1/me/player/devices",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(getIdDevice);
+    const idDevice = getIdDevice.data.devices[0].id;
+    console.log(idDevice);
+    console.log(type);
     await axios.post(
-      `https://api.spotify.com/v1/me/player/${type}`,
+      `https://api.spotify.com/v1/me/player/${type}?device_id=${idDevice}`,
       {},
       {
         headers: {
@@ -24,8 +37,8 @@ export default function PlayerControls() {
         },
       }
     );
-    dispatch ({type: reducerCases.SET_PLAYER_STATE, playerState:true})
-    const response = await axios.get(
+    dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+    const response1 = await axios.get(
       "https://api.spotify.com/v1/me/player/currently-playing",
       {
         headers: {
@@ -34,8 +47,9 @@ export default function PlayerControls() {
         },
       }
     );
-    if (response.data !== "") {
-      const { item } = response.data;
+    console.log(response1);
+    if (response1.data !== "") {
+      const { item } = response1.data;
       const currentlyPlaying = {
         id: item.id,
         name: item.name,
@@ -43,10 +57,42 @@ export default function PlayerControls() {
         image: item.album.images[2].url,
       };
       dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
-    } 
-    else dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying: null });
+    } else dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying: null });
     console.log();
   };
+
+  const changeState = async () => {
+    const state = playerState ? "pause" : "play";
+    const getIdDevice = await axios.get(
+      "https://api.spotify.com/v1/me/player/devices",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(getIdDevice);
+    const idDevice = getIdDevice.data.devices[0].id;
+    console.log(idDevice);
+    console.log(state)
+    const responese2 = await axios.put(
+      `https://api.spotify.com/v1/me/player/${state}?device_id=${idDevice}`,
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(responese2);
+    dispatch({
+      type: reducerCases.SET_PLAYER_STATE,
+      playerState: !playerState,
+    });
+  };
+
   return (
     <Container>
       <div className="shuffle">
@@ -56,9 +102,13 @@ export default function PlayerControls() {
         <CgPlayTrackPrev onClick={() => changeTrack("previous")} />
       </div>
       <div className="state">
-        {playerState ? <BsFillPauseCircleFill /> : <BsFillPlayCircleFill />}
+        {playerState ? (
+          <BsFillPauseCircleFill onClick={changeState} />
+        ) : (
+          <BsFillPlayCircleFill onClick={changeState} />
+        )}
       </div>
-      <div className="next" onClick={() => changeTrack("next ")}>
+      <div className="next" onClick={() => changeTrack("next")}>
         <CgPlayTrackNext />
       </div>
       <div className="repeat">

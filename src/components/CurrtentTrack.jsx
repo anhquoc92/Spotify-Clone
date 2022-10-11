@@ -57,6 +57,7 @@ const Container = styled.div`
       flex-direction: column;
       gap: 0.3rem;
       h4 {
+        font-size: small;
         color: white;
         margin: 0.1rem;
       }

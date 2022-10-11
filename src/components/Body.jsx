@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { AiFillClockCircle } from "react-icons/ai";
 import { useStateProvider } from "../utils/StateProvider";
+import { TiSocialFlickr } from "react-icons/ti";
 import { useEffect } from "react";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
@@ -11,7 +12,6 @@ export default function Body(headerBackground) {
     useStateProvider();
   useEffect(() => {
     const getInitialPlaylist = async () => {
-      console.log(selectedPlaylistId);
       const response = await axios.get(
         `https://api.spotify.com/v1/playlists/${selectedPlaylistId}`,
         {
@@ -21,7 +21,6 @@ export default function Body(headerBackground) {
           },
         }
       );
-      console.log(response.data);
       const selectedPlaylist = {
         id: response.data.id,
         name: response.data.name,
@@ -41,7 +40,7 @@ export default function Body(headerBackground) {
           track_number: track.track_number,
         })),
       };
-      dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist});
+      dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
     };
     getInitialPlaylist();
   }, [token, dispatch, selectedPlaylistId]);
@@ -52,8 +51,10 @@ export default function Body(headerBackground) {
   };
 
   const sumTime = () => {
-    const sumTimePlayList = selectedPlaylist.tracks.map(({ duration }) => duration);
-    return sumTimePlayList.reduce((partialSum, a) => partialSum + a,0);
+    const sumTimePlayList = selectedPlaylist.tracks.map(
+      ({ duration }) => duration
+    );
+    return sumTimePlayList.reduce((partialSum, a) => partialSum + a, 0);
   };
 
   // const msToHoursMinutesSeconds = (ms) => {
@@ -75,9 +76,10 @@ export default function Body(headerBackground) {
               <h1 className="title">{selectedPlaylist.name}</h1>
               <p className="description">{selectedPlaylist.description}</p>
               <p className="infor_react">
-                {selectedPlaylist.display_name} ~{" "}
-                {selectedPlaylist.follower_like} likes ~{" "}
-                {selectedPlaylist.total_song} songs ~ {msToMinutesAndSeconds(sumTime())}
+                {selectedPlaylist.display_name} <TiSocialFlickr />{" "}
+                {selectedPlaylist.follower_like} likes <TiSocialFlickr />{" "}
+                {selectedPlaylist.total_song} songs <TiSocialFlickr />{" "}
+                {msToMinutesAndSeconds(sumTime())}
               </p>
             </div>
           </div>
