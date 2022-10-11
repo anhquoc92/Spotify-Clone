@@ -13,5 +13,6 @@ export default function App() {
       dispatch({ type: reducerCases.SET_TOKEN, token });
     }
   }, [token, dispatch]);
+  console.log(token)
   return <div>{token ? <Spotify /> : <Login />}</div>;
 }

@@ -10,6 +10,7 @@ import { FiRepeat } from "react-icons/fi";
 import { useStateProvider } from "../utils/StateProvider";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
+import Home from "./Home";
 
 export default function PlayerControls() {
   const [{ token, playerState }, dispatch] = useStateProvider();
@@ -19,7 +20,8 @@ export default function PlayerControls() {
       {},
       {
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " +  
+          token,
           "Content-Type": "application/json",
         },
       }
@@ -64,6 +66,7 @@ export default function PlayerControls() {
       <div className="repeat">
         <FiRepeat />
       </div>
+      <Home />
     </Container>
   );
 }
