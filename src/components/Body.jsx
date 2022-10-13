@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { AiFillClockCircle } from "react-icons/ai";
 import { useStateProvider } from "../utils/StateProvider";
 import { TiSocialFlickr } from "react-icons/ti";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 import SpotifyWebApi from "spotify-web-api-node";
@@ -165,7 +165,7 @@ export default function Body(headerBackground) {
     }, [search])
     return (
         <Container>
-            <Form.Control type="search" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)} />
+            <input type="search" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)} />
         </Container>
     )
 }
