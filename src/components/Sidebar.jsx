@@ -16,7 +16,7 @@ export default function Sidebar() {
         </div>
         <ul>
           <li>
-            <MdHomeFilled />
+            <MdHomeFilled onClick=""/>
             <span>Home</span>
           </li>
           <li>

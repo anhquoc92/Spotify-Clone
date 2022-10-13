@@ -2,59 +2,65 @@ import React from "react";
 import styled from "styled-components";
 import { AiFillClockCircle } from "react-icons/ai";
 import { useStateProvider } from "../utils/StateProvider";
+import { TiSocialFlickr } from "react-icons/ti";
 import { useEffect } from "react";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
+import SpotifyWebApi from "spotify-web-api-node";
+
+const spotifyApi = new SpotifyWebApi({
+  clientId: "6dcd9ee75f494fa3a229e3d6f19fd4d4",
+})
 
 export default function Body(headerBackground) {
-  const [{ token, selectedPlaylistId, selectedPlaylist }, dispatch] =
-    useStateProvider();
-  useEffect(() => {
-    const getInitialPlaylist = async () => {
-      console.log(selectedPlaylistId);
-      const response = await axios.get(
-        `https://api.spotify.com/v1/playlists/${selectedPlaylistId}`,
-        {
-          headers: {
-            Authorization: "Bearer " + token,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-      const selectedPlaylist = {
-        id: response.data.id,
-        name: response.data.name,
-        description: response.data.description,
-        image: response.data.images[0].url,
-        total_song: response.data.tracks.total,
-        display_name: response.data.owner.display_name,
-        follower_like: response.data.followers.total,
-        tracks: response.data.tracks.items.map(({ track }) => ({
-          id: track.id,
-          name: track.name,
-          artists: track.artists.map((artist) => artist.name),
-          image: track.album.images[2].url,
-          duration: track.duration_ms,
-          album: track.album.name,
-          context_uri: track.album.uri,
-          track_number: track.track_number,
-        })),
-      };
-      dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist});
-    };
-    getInitialPlaylist();
-  }, [token, dispatch, selectedPlaylistId]);
-  const msToMinutesAndSeconds = (ms) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = ((ms % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-  };
+  // const [{ token, selectedPlaylistId, selectedPlaylist }, dispatch] =
+  //   useStateProvider();
+  // useEffect(() => {
+  //   const getInitialPlaylist = async () => {
+  //     const response = await axios.get(
+  //       `https://api.spotify.com/v1/playlists/${selectedPlaylistId}`,
+  //       {
+  //         headers: {
+  //           Authorization: "Bearer " + token,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     const selectedPlaylist = {
+  //       id: response.data.id,
+  //       name: response.data.name,
+  //       description: response.data.description,
+  //       image: response.data.images[0].url,
+  //       total_song: response.data.tracks.total,
+  //       display_name: response.data.owner.display_name,
+  //       follower_like: response.data.followers.total,
+  //       tracks: response.data.tracks.items.map(({ track }) => ({
+  //         id: track.id,
+  //         name: track.name,
+  //         artists: track.artists.map((artist) => artist.name),
+  //         image: track.album.images[2].url,
+  //         duration: track.duration_ms,
+  //         album: track.album.name,
+  //         context_uri: track.album.uri,
+  //         track_number: track.track_number,
+  //       })),
+  //     };
+  //     dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
+  //   };
+  //   getInitialPlaylist();
+  // }, [token, dispatch, selectedPlaylistId]);
+  // const msToMinutesAndSeconds = (ms) => {
+  //   const minutes = Math.floor(ms / 60000);
+  //   const seconds = ((ms % 60000) / 1000).toFixed(0);
+  //   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  // };
 
-  const sumTime = () => {
-    const sumTimePlayList = selectedPlaylist.tracks.map(({ duration }) => duration);
-    return sumTimePlayList.reduce((partialSum, a) => partialSum + a,0);
-  };
+  // const sumTime = () => {
+  //   const sumTimePlayList = selectedPlaylist.tracks.map(
+  //     ({ duration }) => duration
+  //   );
+  //   return sumTimePlayList.reduce((partialSum, a) => partialSum + a, 0);
+  // };
 
   // const msToHoursMinutesSeconds = (ms) => {
   //   const minutes = Math.floor(ms / 60000);
@@ -62,87 +68,106 @@ export default function Body(headerBackground) {
   //   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
   // };
 
-  return (
-    <Container headerBackground={headerBackground}>
-      {selectedPlaylist && (
-        <>
-          <div className="playlist">
-            <div className="image">
-              <img src={selectedPlaylist.image} alt="selectedplaylist" />
-            </div>
-            <div className="details">
-              <span className="type">PLAYLIST</span>
-              <h1 className="title">{selectedPlaylist.name}</h1>
-              <p className="description">{selectedPlaylist.description}</p>
-              <p className="infor_react">
-                {selectedPlaylist.display_name} ~{" "}
-                {selectedPlaylist.follower_like} likes ~{" "}
-                {selectedPlaylist.total_song} songs ~ {msToMinutesAndSeconds(sumTime())}
-              </p>
-            </div>
-          </div>
-          <div className="list">
-            <div className="header__row">
-              <div className="dol">
-                <span>#</span>
-              </div>
-              <div className="dol">
-                <span>TITLE</span>
-              </div>
-              <div className="dol">
-                <span>ALBUM</span>
-              </div>
-              <div className="dol">
-                <span>
-                  <AiFillClockCircle />
-                </span>
-              </div>
-            </div>
-            <div className="tracks">
-              {selectedPlaylist.tracks.map(
-                (
-                  {
-                    id,
-                    name,
-                    artists,
-                    image,
-                    duration,
-                    album,
-                    context_uri,
-                    track_number,
-                  },
-                  index
-                ) => {
-                  return (
-                    <div className="row" key={id}>
-                      <div className="col">
-                        <span>{index + 1}</span>
-                      </div>
-                      <div className="col detail">
-                        <div className="image">
-                          <img src={image} alt="track" />
-                        </div>
-                        <div className="info">
-                          <span className="name">{name}</span>
-                          <span>{artists}</span>
-                        </div>
-                      </div>
-                      <div className="col">
-                        <span>{album}</span>
-                      </div>
-                      <div className="col">
-                        <span>{msToMinutesAndSeconds(duration)}</span>
-                      </div>
-                    </div>
-                  );
-                }
-              )}
-            </div>
-          </div>
-        </>
-      )}
-    </Container>
-  );
+ 
+
+  // return (
+  //   <Container headerBackground={headerBackground}>
+  //     {selectedPlaylist && (
+  //       <>
+  //         <div className="playlist">
+  //           <div className="image">
+  //             <img src={selectedPlaylist.image} alt="selectedplaylist" />
+  //           </div>
+  //           <div className="details">
+  //             <span className="type">PLAYLIST</span>
+  //             <h1 className="title">{selectedPlaylist.name}</h1>
+  //             <p className="description">{selectedPlaylist.description}</p>
+  //             <p className="infor_react">
+  //               {selectedPlaylist.display_name} <TiSocialFlickr />{" "}
+  //               {selectedPlaylist.follower_like} likes <TiSocialFlickr />{" "}
+  //               {selectedPlaylist.total_song} songs <TiSocialFlickr />{" "}
+  //               {msToMinutesAndSeconds(sumTime())}
+  //             </p>
+  //           </div>
+  //         </div>
+  //         <div className="list">
+  //           <div className="header__row">
+  //             <div className="dol">
+  //               <span>#</span>
+  //             </div>
+  //             <div className="dol">
+  //               <span>TITLE</span>
+  //             </div>
+  //             <div className="dol">
+  //               <span>ALBUM</span>
+  //             </div>
+  //             <div className="dol">
+  //               <span>
+  //                 <AiFillClockCircle />
+  //               </span>
+  //             </div>
+  //           </div>
+  //           <div className="tracks">
+  //             {selectedPlaylist.tracks.map(
+  //               (
+  //                 {
+  //                   id,
+  //                   name,
+  //                   artists,
+  //                   image,
+  //                   duration,
+  //                   album,
+  //                   context_uri,
+  //                   track_number,
+  //                 },
+  //                 index
+  //               ) => {
+  //                 return (
+  //                   <div className="row" key={id}>
+  //                     <div className="col">
+  //                       <span>{index + 1}</span>
+  //                     </div>
+  //                     <div className="col detail">
+  //                       <div className="image">
+  //                         <img src={image} alt="track" />
+  //                       </div>
+  //                       <div className="info">
+  //                         <span className="name">{name}</span>
+  //                         <span>{artists}</span>
+  //                       </div>
+  //                     </div>
+  //                     <div className="col">
+  //                       <span>{album}</span>
+  //                     </div>
+  //                     <div className="col">
+  //                       <span>{msToMinutesAndSeconds(duration)}</span>
+  //                     </div>
+  //                   </div>
+  //                 );
+  //               }
+  //             )}
+  //           </div>
+  //         </div>
+  //       </>
+  //     )}
+  //   </Container>
+  // );
+
+  const [search, setSearch] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+
+    useEffect(() => {
+        if (!search) return setSearchResults([]);
+
+        spotifyApi.searchTracks(search).then(response => {
+            console.log(response)
+        })
+    }, [search])
+    return (
+        <Container>
+            <Form.Control type="search" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)} />
+        </Container>
+    )
 }
 
 const Container = styled.div`

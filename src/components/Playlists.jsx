@@ -17,6 +17,7 @@ export default function Playlists() {
           },
         }
       );
+      console.log(response);
       const { items } = response.data;
       const playlists = items.map(({ name, id }) => {
         return { name, id };
@@ -25,11 +26,17 @@ export default function Playlists() {
     };
     getPlayListData();
   }, [token, dispatch]);
+
+  const changeCurrentPlaylist = (selectedPlaylistId) => {
+    dispatch({type: reducerCases.SET_PLAYLIST_ID, selectedPlaylistId})
+    console.log(selectedPlaylistId)
+  };
+  
   return (
     <Container>
       <ul>
         {playlists.map(({ name, id }) => {
-          return <li key={id}>{name}</li>;
+          return <li key={id} onClick={() => changeCurrentPlaylist(id)}>{name}</li>;
         })}
       </ul>
     </Container>
