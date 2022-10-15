@@ -10,6 +10,8 @@ export const initialState = {
   playerState: false,
   playerShuffle: false,
   playerRepeat: false,
+  categories: [],
+  categoryPlaylists: [],
 };
 
 const reducer = (state, action) => {
@@ -68,6 +70,18 @@ const reducer = (state, action) => {
         ...state,
         selectedPlaylistId: action.selectedPlaylistId,
       };
+    }
+    case reducerCases.SET_CATEGORIES: {
+      return {
+        ...state,
+        categories: action.categories
+      }
+    }
+    case reducerCases.SET_CATEGORIES_PLAYLISTS: {
+      return {
+        ...state,
+        categoryPlaylists: action.categoryPlaylists
+      }
     }
     default:
       return state;

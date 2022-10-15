@@ -13,6 +13,7 @@ import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 import { msToMinutesAndSeconds } from "../utils/datetime-utils";
 
+
 export default function PlayerControls() {
   const [{ token, playerState, playerShuffle, playerRepeat,currentlyPlaying }, dispatch] =
     useStateProvider();
@@ -34,7 +35,8 @@ export default function PlayerControls() {
       {},
       {
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " +  
+          token,
           "Content-Type": "application/json",
         },
       }

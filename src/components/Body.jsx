@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { AiFillClockCircle } from "react-icons/ai";
 import { useStateProvider } from "../utils/StateProvider";
 import { TiSocialFlickr } from "react-icons/ti";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 import { msToMinutesAndSeconds } from "../utils/datetime-utils";
