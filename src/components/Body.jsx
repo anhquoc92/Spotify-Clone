@@ -6,6 +6,7 @@ import { TiSocialFlickr } from "react-icons/ti";
 import { useEffect } from "react";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
+import { msToMinutesAndSeconds } from "../utils/datetime-utils";
 
 export default function Body(headerBackground) {
   const [{ token, selectedPlaylistId, selectedPlaylist }, dispatch] =
@@ -40,15 +41,12 @@ export default function Body(headerBackground) {
           track_number: track.track_number,
         })),
       };
+      console.log(selectedPlaylist);
       dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
     };
+
     getInitialPlaylist();
   }, [token, dispatch, selectedPlaylistId]);
-  const msToMinutesAndSeconds = (ms) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = ((ms % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-  };
 
   const sumTime = () => {
     const sumTimePlayList = selectedPlaylist.tracks.map(
@@ -57,11 +55,49 @@ export default function Body(headerBackground) {
     return sumTimePlayList.reduce((partialSum, a) => partialSum + a, 0);
   };
 
-  // const msToHoursMinutesSeconds = (ms) => {
-  //   const minutes = Math.floor(ms / 60000);
-  //   const seconds = ((ms % 60000) / 1000).toFixed(0);
-  //   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-  // };
+  const playTrack = async (
+    id,
+    name,
+    artists,
+    image,
+    context_uri,
+    track_number
+  ) => {
+    const getIdDevice = await axios.get(
+      "https://api.spotify.com/v1/me/player/devices",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const idDevice = getIdDevice.data.devices[0].id;
+    const response = await axios.put(
+      `https://api.spotify.com/v1/me/player/play?device_id=${idDevice}`,
+      {
+        context_uri,
+        offset: { position: track_number - 1 },
+        position_ms: 0,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 204) {
+      const currentlyPlaying = {
+        id,
+        name,
+        artists,
+        image,
+      };
+      dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
+      dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+    } else dispatch({ type: reducerCases.SET_PLAYER_STATE, playerState: true });
+  };
 
   return (
     <Container headerBackground={headerBackground}>
@@ -116,7 +152,20 @@ export default function Body(headerBackground) {
                   index
                 ) => {
                   return (
-                    <div className="row" key={id}>
+                    <div
+                      className="row"
+                      key={id}
+                      onClick={() =>
+                        playTrack(
+                          id,
+                          name,
+                          artists,
+                          image,
+                          context_uri,
+                          track_number
+                        )
+                      }
+                    >
                       <div className="col">
                         <span>{index + 1}</span>
                       </div>
@@ -191,7 +240,7 @@ const Container = styled.div`
       .row {
         padding: 0.5rem 1rem;
         display: grid;
-        grid-template-columns: 0.3fr 3.1fr 1.9fr 0.1fr;
+        grid-template-columns: 0.3fr 3.1fr 2.05fr 0.1fr;
         &:hover {
           background-color: rgba(0, 0, 0, 0.7);
         }
@@ -215,3 +264,10 @@ const Container = styled.div`
     }
   }
 `;
+
+// {/* <a draggable='false' href="https://open.spotify.com/genre/0JQ5DArNBzkmxXHCqFLx2J" loading='lazy'>
+// <div>
+//     <img aria-hidden='false' draggable='false' loading='lazy' src="" alt="" />
+//     <span className="">Podcasts</span>
+// </div>
+// </a> */}

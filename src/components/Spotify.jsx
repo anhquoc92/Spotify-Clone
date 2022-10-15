@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import Body from "./Body";
+import BrowseSearch from "./BrowseSearch";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -48,6 +49,7 @@ export default function Spotify() {
           <Navbar navBackground={navBackground} />
           <div className="body__contents">
             <Body headerBackground={headerBackground} />
+            {/* <BrowseSearch /> */}
           </div>
         </div>
       </div>

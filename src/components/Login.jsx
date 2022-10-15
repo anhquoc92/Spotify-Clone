@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import LoginAcc from "./LoginAcc";
 
 export default function Login() {
   const handleClick = () => {
-    const clientId = "e585ef943fd349f9884ddd3b7a4c7cf1"; //6dcd9ee75f494fa3a229e3d6f19fd4d4 f6464f2b39f04c4fa11e11d2157545db
+    const clientId = "f6464f2b39f04c4fa11e11d2157545db"; //6dcd9ee75f494fa3a229e3d6f19fd4d4-Quoc1 f6464f2b39f04c4fa11e11d2157545db-Minh2 e585ef943fd349f9884ddd3b7a4c7cf1-Minh
     const redirecUrl = "http://localhost:3000/";
     const apiUrl = "http://accounts.spotify.com/authorize";
     const scope = [
@@ -26,7 +27,8 @@ export default function Login() {
         src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Logo_CMYK_Black.png"
         alt="spotify"
       ></img>
-      <button onClick={handleClick}>Connect Spotify</button>
+      <button onClick={handleClick}>Connect Spotify By Token</button>
+      <LoginAcc />
     </Container>
   );
 }
@@ -39,7 +41,7 @@ const Container = styled.div`
   height: 100vh;
   width: 100vw;
   background-color: #1db954;
-  gap: 5rem;
+  gap: 2rem;
   img {
     height: 20vh;
   }
@@ -52,5 +54,3 @@ const Container = styled.div`
     font-size: 1.4rem;
   }
 `;
-
-//BQDLOyePREsmpmsU6s7jzHN3f18dDhphLttxTtvaVyy5SGOAVM3OsOqDG1_zyTZP7EleSubAFY_GeTgIFEvFB6QaMwg6or_QAKPNFS514uXh_W6cQiOYdz1vkimmpGafF2322BnMW54uSpylhSNCARjtu19dDT8FbtP6e4NSFojIlXkOM0LY39mGcSmFupK7SPQAZXo7oMYcvmr6gCkkElcygEw8YglBk3al
