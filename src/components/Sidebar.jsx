@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { IoLibrary } from "react-icons/io5";
 import { MdHomeFilled, MdSearch } from "react-icons/md";
 import Playlists from "./Playlists";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
+  const navigate = useNavigate();
   return (
     <Container>
       <div className="top__links">
@@ -15,15 +17,19 @@ export default function Sidebar() {
           ></img>
         </div>
         <ul>
-          <li>
-            <MdHomeFilled onClick=""/>
+          <li onClick={() => {
+                  navigate(`/${window.location.hash}`);
+                }}>
+            <MdHomeFilled />
             <span>Home</span>
           </li>
           <li>
             <MdSearch />
             <span>Search</span>
           </li>
-          <li>
+          <li onClick={() => {
+                  navigate(`/library${window.location.hash}`);
+                }}>
             <IoLibrary />
             <span>Your Library</span>
           </li>

@@ -4,13 +4,16 @@ import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-const categoryPlaylistsData = () => {
+const CategoryPlaylistsData = () => {
   const [{ token, categoryPlaylists }, dispatch] = useStateProvider();
+  const {id} = useParams()
+  console.log(id)
   useEffect(() => {
-    const getCatergoriesPlaylists = async (categoryId) => {
+    const getCatergoriesPlaylists = async (id) => {
       const response = await axios.get(
-        `https://api.spotify.com/v1/browse/categories/${categoryId}/playlists`,
+        `https://api.spotify.com/v1/browse/categories/${id}/playlists`,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -26,7 +29,7 @@ const categoryPlaylistsData = () => {
         categoryPlaylists,
       });
     };
-    getCatergoriesPlaylists();
+    getCatergoriesPlaylists(id);
   }, [token, dispatch]);
 
   return (
@@ -34,8 +37,8 @@ const categoryPlaylistsData = () => {
       <div>
         {categoryPlaylists.map((categoryPlaylist) => {
           return (
-            <div>
-              <h2>{categoryPlaylist.name}</h2>
+            <div className="category-playlists">
+              <h2 className="category-playlists-name">{categoryPlaylist.name}</h2>
               <img
                 key={categoryPlaylist.id}
                 src={categoryPlaylist.images[0].url}
@@ -50,28 +53,19 @@ const categoryPlaylistsData = () => {
   );
 };
 
-export default categoryPlaylistsData;
+export default CategoryPlaylistsData;
 
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  svg {
-    color: yellowgreen;
-    transition: 0.2s ease-in-out;
-    &:hover {
-      color: white;
-    }
+  .category-playlists {
+    display: block;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 30px;
+    margin-bottom: 20px;
   }
-  .state {
-    svg {
-      color: white;
-    }
+  .category-playlists-name {
+    color: white;
+    margin-bottom: 10px;
   }
-  .previous,
-  .next,
-  .state {
-    font-size: 2.5rem;
-  }
-`;
+`

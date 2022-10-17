@@ -2,19 +2,29 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useEffect, useRef } from "react";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import styled from "styled-components";
 import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import Body from "./Body";
+import Categories from "./Categories";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+import CategoryPlaylistsData from "./CategoriesPlaylists";
 
 export default function Spotify() {
   const [{ token }, dispatch] = useStateProvider();
   const bodyRef = useRef();
   const [navBackground, setNavBackground] = useState(false);
   const [headerBackground, setHeaderBackground] = useState(false);
+  const navigate = useNavigate();
   const bodyScrolled = () => {
     bodyRef.current.scrollTop >= 30
       ? setNavBackground(true)
@@ -39,7 +49,7 @@ export default function Spotify() {
     };
     getUserInfo();
   }, [dispatch, token]);
-
+  const { access_token } = useLocation();
   return (
     <Container>
       <div className="spotify__body">
@@ -47,7 +57,27 @@ export default function Spotify() {
         <div className="body" ref={bodyRef} onScroll={bodyScrolled}>
           <Navbar navBackground={navBackground} />
           <div className="body__contents">
-            <Body headerBackground={headerBackground} />
+            <Routes>
+              <Route
+                path="/"
+                element={<Categories />}
+              />
+              <Route path="/playlists/:id" element={<CategoryPlaylistsData />} />
+              <Route path="/library" element={<Body />} />
+              <Route
+                path="/s"
+                element={
+                  <Link to={`/asdasd${window.location.hash}`}>
+                    aaaaaaaaaaaaaaaaaaa
+                  </Link>
+                }
+              />{" "}
+              navigate("/asdasd")
+              {/* <Route path="/library" element={<Library/>}/>
+                <Route path="/library" element={<Library/>}/>
+                <Route path="/library" element={<Library/>}/>
+                <Route path="/library" element={<Library/>}/> */}
+            </Routes>
           </div>
         </div>
       </div>

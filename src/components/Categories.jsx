@@ -4,10 +4,11 @@ import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
   const [{ token, categories }, dispatch] = useStateProvider();
-
+  const navigate = useNavigate();
   useEffect(() => {
     const getCategories = async () => {
       const response = await axios.get(
@@ -21,7 +22,7 @@ const Categories = () => {
       );
       const categories = response.data.categories.items;
       console.log(categories);
-      dispatch({ type: reducerCases.SET_CATEGORIES, categories });  
+      dispatch({ type: reducerCases.SET_CATEGORIES, categories });
     };
     getCategories();
   }, [token, dispatch]);
@@ -31,9 +32,15 @@ const Categories = () => {
       <div>
         {categories.map((category) => {
           return (
-            <div>
-              <h2>{category.name}</h2>
-              <img key={category.id} src={category.icons[0].url} />
+            <div className="categories">
+              <h2 className="category-name">{category.name}</h2>
+              <img
+                key={category.id}
+                src={category.icons[0].url}
+                onClick={() => {
+                  navigate(`/playlists/${category.id}${window.location.hash}`);
+                }}
+              />
             </div>
           );
         })}
@@ -45,25 +52,17 @@ const Categories = () => {
 export default Categories;
 
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  svg {
-    color: yellowgreen;
-    transition: 0.2s ease-in-out;
-    &:hover {
-      color: white;
+  .categories {
+    display: inline-block;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    margin: 10px;
+    img {
+      cursor: pointer;
     }
   }
-  .state {
-    svg {
-      color: white;
-    }
-  }
-  .previous,
-  .next,
-  .state {
-    font-size: 2.5rem;
+  .category-name {
+    color: white;
   }
 `;
