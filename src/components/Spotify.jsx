@@ -14,6 +14,7 @@ import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import Body from "./Body";
 import Categories from "./Categories";
+import BrowseSearch from "./BrowseSearch";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -63,7 +64,7 @@ export default function Spotify() {
                 element={<Categories />}
               />
               <Route path="/playlists/:id" element={<CategoryPlaylistsData />} />
-              <Route path="/library" element={<Body />} />
+              <Route path="/library" element={<Body headerBackground={headerBackground}/>} />
               <Route
                 path="/s"
                 element={

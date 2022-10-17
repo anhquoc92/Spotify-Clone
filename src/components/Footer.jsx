@@ -20,8 +20,9 @@ const Container = styled.div`
   width: 100%;
   border-top: 1px solid #282828;
   display: grid;
+  align-content: space-around;
   grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 0 3rem 0 2rem;
 `;

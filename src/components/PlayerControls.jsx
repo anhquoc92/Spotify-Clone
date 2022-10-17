@@ -1,19 +1,23 @@
 import React from "react";
 import styled from "styled-components";
+import { BsFillPlayCircleFill, BsFillPauseCircleFill } from "react-icons/bs";
 import {
-  BsFillPlayCircleFill,
-  BsFillPauseCircleFill,
-  BsShuffle,
-} from "react-icons/bs";
+  MdOutlineShuffleOn,
+  MdShuffle,
+  MdRepeat,
+  MdOutlineRepeatOn,
+} from "react-icons/md";
 import { CgPlayTrackNext, CgPlayTrackPrev } from "react-icons/cg";
-import { FiRepeat } from "react-icons/fi";
 import { useStateProvider } from "../utils/StateProvider";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
+import { msToMinutesAndSeconds } from "../utils/datetime-utils";
 
 
 export default function PlayerControls() {
-  const [{ token, playerState }, dispatch] = useStateProvider();
+  const [{ token, playerState, playerShuffle, playerRepeat,currentlyPlaying }, dispatch] =
+    useStateProvider();
+
   const changeTrack = async (type) => {
     const getIdDevice = await axios.get(
       "https://api.spotify.com/v1/me/player/devices",
@@ -24,9 +28,7 @@ export default function PlayerControls() {
         },
       }
     );
-    console.log(getIdDevice);
     const idDevice = getIdDevice.data.devices[0].id;
-    console.log(idDevice);
     console.log(type);
     await axios.post(
       `https://api.spotify.com/v1/me/player/${type}?device_id=${idDevice}`,
@@ -55,12 +57,12 @@ export default function PlayerControls() {
       const currentlyPlaying = {
         id: item.id,
         name: item.name,
+        duration: item.duration_ms,
         artists: item.artists.map((artist) => artist.name),
         image: item.album.images[2].url,
       };
       dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying });
     } else dispatch({ type: reducerCases.SET_PLAYING, currentlyPlaying: null });
-    console.log();
   };
 
   const changeState = async () => {
@@ -74,11 +76,8 @@ export default function PlayerControls() {
         },
       }
     );
-    console.log(getIdDevice);
     const idDevice = getIdDevice.data.devices[0].id;
-    console.log(idDevice);
-    console.log(state)
-    const responese2 = await axios.put(
+    const response2 = await axios.put(
       `https://api.spotify.com/v1/me/player/${state}?device_id=${idDevice}`,
       {},
       {
@@ -88,58 +87,197 @@ export default function PlayerControls() {
         },
       }
     );
-    console.log(responese2);
+    console.log(response2);
     dispatch({
       type: reducerCases.SET_PLAYER_STATE,
       playerState: !playerState,
     });
   };
 
+  const changeShuffle = async () => {
+    const shuffle = playerShuffle ? "false" : "true";
+    const getIdDevice = await axios.get(
+      "https://api.spotify.com/v1/me/player/devices",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const idDevice = getIdDevice.data.devices[0].id;
+    const response3 = await axios.put(
+      `https://api.spotify.com/v1/me/player/shuffle?state=${shuffle}&device_id=${idDevice}`,
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response3);
+    dispatch({
+      type: reducerCases.SET_PLAYER_SHUFFLE,
+      playerShuffle: !playerShuffle,
+    });
+  };
+
+  const changeRepeat = async () => {
+    const repeat = playerShuffle ? "off" : "context";
+    const getIdDevice = await axios.get(
+      "https://api.spotify.com/v1/me/player/devices",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const idDevice = getIdDevice.data.devices[0].id;
+    console.log(repeat);
+    const response3 = await axios.put(
+      `https://api.spotify.com/v1/me/player/repeat?state=${repeat}&device_id=${idDevice}`,
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    dispatch({
+      type: reducerCases.SET_PLAYER_REPEAT,
+      playerRepeat: !playerRepeat,
+    });
+  };
+
   return (
     <Container>
-      <div className="shuffle">
-        <BsShuffle />
+      <div className="button__control">
+        <div className="shuffle tooltip">
+          {playerShuffle ? (
+            <MdOutlineShuffleOn onClick={changeShuffle} />
+          ) : (
+            <MdShuffle onClick={changeShuffle} />
+          )}
+          <span className="tooltiptext">Enable Shuffle</span>
+        </div>
+        <div className="previous tooltip">
+          <CgPlayTrackPrev onClick={() => changeTrack("previous")} />
+          <span className="tooltiptext">Previous</span>
+        </div>
+        <div className="state tooltip">
+          {playerState ? (
+            <BsFillPauseCircleFill onClick={changeState} />
+          ) : (
+            <BsFillPlayCircleFill onClick={changeState} />
+          )}
+          <span className="tooltiptext">Play</span>
+        </div>
+        <div className="next tooltip" onClick={() => changeTrack("next")}>
+          <CgPlayTrackNext />
+          <span className="tooltiptext">Next</span>
+        </div>
+        <div className="repeat tooltip">
+          {playerRepeat ? (
+            <MdOutlineRepeatOn onClick={changeRepeat} />
+          ) : (
+            <MdRepeat onClick={changeRepeat} />
+          )}
+          <span className="tooltiptext">Enable Repeat</span>
+        </div>
       </div>
-      <div className="previous">
-        <CgPlayTrackPrev onClick={() => changeTrack("previous")} />
-      </div>
-      <div className="state">
-        {playerState ? (
-          <BsFillPauseCircleFill onClick={changeState} />
-        ) : (
-          <BsFillPlayCircleFill onClick={changeState} />
-        )}
-      </div>
-      <div className="next" onClick={() => changeTrack("next")}>
-        <CgPlayTrackNext />
-      </div>
-      <div className="repeat">
-        <FiRepeat />
+      <div className="process__bar">
+        {currentlyPlaying ? (<div className="time__full">{msToMinutesAndSeconds(currentlyPlaying.duration)}</div>) : ''}
+        <input type="range" min={0} max={100} />
+        <div className="time__run">00:00</div>
       </div>
     </Container>
   );
 }
 
 const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  svg {
-    color: yellowgreen;
-    transition: 0.2s ease-in-out;
-    &:hover {
-      color: white;
-    }
-  }
-  .state {
+  padding: 0 3rem 0 2rem;
+  .button__control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
     svg {
+      color: yellowgreen;
+      transition: 0.2s ease-in-out;
+      &:hover {
+        color: white;
+      }
+    }
+    .state {
+      svg {
+        color: white;
+      }
+    }
+    .previous,
+    .next,
+    .state {
+      font-size: 2rem;
+    }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted black;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 7rem;
+      background-color: #302f2f;
       color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      font-size: 1rem;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .tooltip .span {
+      font-size: 2rem;
     }
   }
-  .previous,
-  .next,
-  .state {
-    font-size: 2.5rem;
+
+  .process__bar {
+    display: flex;
+    flex-direction: row-reverse;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+    color: #b3b3b3;
+    font-size: small;
+    margin: 0 2rem 0 2rem;
+    input {
+      width: 86%;
+      border-radius: 2rem;
+      height: 0.3rem;
+    }
   }
 `;
