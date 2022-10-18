@@ -6,9 +6,14 @@ export const initialState = {
   library: [],
   userInfo: null,
   selectedPlaylistId: "0a9afa271afb418abf1454e6fbdfd925",  //0r9lC6sJ7H6loFRe0HBAFT 37i9dQZF1DX5wl7LrXS3uG 7vqyCtqzbioUxLkEgQos2B
+  selectedPlaylistId: "7vqyCtqzbioUxLkEgQos2B", //0r9lC6sJ7H6loFRe0HBAFT 37i9dQZF1DX5wl7LrXS3uG
   selectedPlaylist: null,
   currentlyPlaying: null,
-  playerState:false, 
+  playerState: false,
+  playerShuffle: false,
+  playerRepeat: false,
+  categories: [],
+  categoryPlaylists: [],
 };
 
 const reducer = (state, action) => {
@@ -49,6 +54,19 @@ const reducer = (state, action) => {
         playerState: action.playerState,
       };
     }
+    case reducerCases.SET_PLAYER_SHUFFLE: {
+      return {
+        ...state,
+        playerShuffle: action.playerShuffle,
+      };
+    }
+    case reducerCases.SET_PLAYER_REPEAT: {
+      return {
+        ...state,
+        playerRepeat: action.playerRepeat,
+      };
+    }
+
     case reducerCases.SET_PLAYLIST_ID: {
       return {
         ...state,
@@ -59,6 +77,18 @@ const reducer = (state, action) => {
       return{
         ...state,
         library: action.library,
+      }
+    }
+    case reducerCases.SET_CATEGORIES: {
+      return {
+        ...state,
+        categories: action.categories
+      }
+    }
+    case reducerCases.SET_CATEGORIES_PLAYLISTS: {
+      return {
+        ...state,
+        categoryPlaylists: action.categoryPlaylists
       }
     }
     default:

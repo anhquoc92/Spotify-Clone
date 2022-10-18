@@ -3,9 +3,11 @@ import React, { useEffect } from "react";
 import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export default function Playlists() {
   const [{ token, playlists }, dispatch] = useStateProvider();
+  const navigate = useNavigate();
   useEffect(() => {
     const getPlayListData = async () => {
       const response = await axios.get(
@@ -17,7 +19,6 @@ export default function Playlists() {
           },
         }
       );
-      console.log(response);
       const { items } = response.data;
       const playlists = items.map(({ name, id }) => {
         return { name, id };
@@ -36,7 +37,10 @@ export default function Playlists() {
     <Container>
       <ul>
         {playlists.map(({ name, id }) => {
-          return <li key={id} onClick={() => changeCurrentPlaylist(id)}>{name}</li>;
+          return <li key={id} onClick={() => {
+            navigate(`/library`)
+            changeCurrentPlaylist(id)
+          }}>{name}</li>;
         })}
       </ul>
     </Container>

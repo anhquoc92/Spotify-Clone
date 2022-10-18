@@ -2,10 +2,19 @@ import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { useEffect, useRef } from "react";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import styled from "styled-components";
 import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import Body from "./Body";
+import Categories from "./Categories";
+import BrowseSearch from "./BrowseSearch";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
@@ -14,12 +23,16 @@ import {Routes, Route} from "react-router-dom";
 import Library from "../pages/yourLibrary";
 import LikeSong from "../pages/likedSong";
 import ListSearch  from "../search/searchList";
+import CategoryPlaylistsData from "./CategoriesPlaylists";
+import Search from "./Search";
+import TrackSearchResult from "./TrackSearchResult";
 
 export default function Spotify() {
   const [{ token }, dispatch] = useStateProvider();
   const bodyRef = useRef();
   const [navBackground, setNavBackground] = useState(false);
   const [headerBackground, setHeaderBackground] = useState(false);
+  const navigate = useNavigate();
   const bodyScrolled = () => {
     bodyRef.current.scrollTop >= 30
       ? setNavBackground(true)
@@ -44,7 +57,7 @@ export default function Spotify() {
     };
     getUserInfo();
   }, [dispatch, token]);
-
+  const { access_token } = useLocation();
   return (
     <Container>
       <div className="spotify__body">
@@ -52,14 +65,23 @@ export default function Spotify() {
         <div className="body" ref={bodyRef} onScroll={bodyScrolled}>
           <Navbar navBackground={navBackground} />
           <div className="body__contents">
-                <div>
-                  <Routes>
-                    <Route path="/:id" element={<Body headerBackground={headerBackground} />}/>
-                    <Route path="/library" element={<Library/>}/>
-                    <Route path="/Liked" element = {<LikeSong/>}/>
-                    <Route path="/Search" element = {<ListSearch/>}/>
-                  </Routes>
-                </div>
+            <Routes>
+              <Route path="/" element={<Categories />} />
+              <Route
+                path="/playlists/:id"
+                element={<CategoryPlaylistsData />}
+              />
+              <Route
+                path="/library"
+                element={<Body headerBackground={headerBackground} />}
+              />
+              <Route path="/search" element={<Search />} />
+              <Route path="/search/:searchvalue" element={<Search />} />
+              {/* <Route path="/library" element={<Library/>}/>
+                <Route path="/library" element={<Library/>}/>
+                <Route path="/library" element={<Library/>}/>
+                <Route path="/library" element={<Library/>}/> */}
+            </Routes>
           </div>
         </div>
         </div>
