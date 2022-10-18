@@ -3,8 +3,9 @@ import { reducerCases } from "./Constants";
 export const initialState = {
   token: null,
   playlists: [],
+  library: [],
   userInfo: null,
-  selectedPlaylistId: "7vqyCtqzbioUxLkEgQos2B",  //0r9lC6sJ7H6loFRe0HBAFT 37i9dQZF1DX5wl7LrXS3uG
+  selectedPlaylistId: "0a9afa271afb418abf1454e6fbdfd925",  //0r9lC6sJ7H6loFRe0HBAFT 37i9dQZF1DX5wl7LrXS3uG 7vqyCtqzbioUxLkEgQos2B
   selectedPlaylist: null,
   currentlyPlaying: null,
   playerState:false, 
@@ -53,6 +54,12 @@ const reducer = (state, action) => {
         ...state,
         selectedPlaylistId: action.selectedPlaylistId,
       };
+    }
+    case reducerCases.SET_PLAYPLIST_LIBRARY: {
+      return{
+        ...state,
+        library: action.library,
+      }
     }
     default:
       return state;

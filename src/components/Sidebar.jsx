@@ -2,8 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { IoLibrary } from "react-icons/io5";
 import { MdHomeFilled, MdSearch } from "react-icons/md";
+import {AiOutlineHeart} from "react-icons/ai";
 import Playlists from "./Playlists";
-
+import { Link } from "react-router-dom";
 export default function Sidebar() {
   return (
     <Container>
@@ -17,15 +18,21 @@ export default function Sidebar() {
         <ul>
           <li>
             <MdHomeFilled />
-            <span>Home</span>
+           <span>Home</span>
           </li>
           <li>
             <MdSearch />
-            <span>Search</span>
+            <Link to ="/Search"><span>Search</span></Link>
           </li>
           <li>
             <IoLibrary />
-            <span>Your Library</span>
+            <Link to ="/library"><span>Your Library</span></Link>
+          </li>
+          <li/>
+
+          <li>
+            <AiOutlineHeart />
+            <Link to = "/Liked"><span>Liked Songs</span></Link>
           </li>
         </ul>
       </div>

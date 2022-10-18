@@ -6,8 +6,10 @@ import { TiSocialFlickr } from "react-icons/ti";
 import { useEffect } from "react";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
+import { useParams } from "react-router-dom";
 
 export default function Body(headerBackground) {
+  const {id} = useParams()
   const [{ token, selectedPlaylistId, selectedPlaylist }, dispatch] =
     useStateProvider();
   useEffect(() => {
@@ -43,7 +45,7 @@ export default function Body(headerBackground) {
       dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
     };
     getInitialPlaylist();
-  }, [token, dispatch, selectedPlaylistId]);
+  }, [token, dispatch, selectedPlaylist]);
   const msToMinutesAndSeconds = (ms) => {
     const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);

@@ -9,6 +9,11 @@ import Body from "./Body";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
+// phần làm route
+import {Routes, Route} from "react-router-dom";
+import Library from "../pages/yourLibrary";
+import LikeSong from "../pages/likedSong";
+import ListSearch  from "../search/searchList";
 
 export default function Spotify() {
   const [{ token }, dispatch] = useStateProvider();
@@ -47,10 +52,17 @@ export default function Spotify() {
         <div className="body" ref={bodyRef} onScroll={bodyScrolled}>
           <Navbar navBackground={navBackground} />
           <div className="body__contents">
-            <Body headerBackground={headerBackground} />
+                <div>
+                  <Routes>
+                    <Route path="/:id" element={<Body headerBackground={headerBackground} />}/>
+                    <Route path="/library" element={<Library/>}/>
+                    <Route path="/Liked" element = {<LikeSong/>}/>
+                    <Route path="/Search" element = {<ListSearch/>}/>
+                  </Routes>
+                </div>
           </div>
         </div>
-      </div>
+        </div>
       <div className="spotify__footer">
         <Footer />
       </div>
