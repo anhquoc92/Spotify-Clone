@@ -19,6 +19,8 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import CategoryPlaylistsData from "./CategoriesPlaylists";
+import Search from "./Search";
+import TrackSearchResult from "./TrackSearchResult";
 
 export default function Spotify() {
   const [{ token }, dispatch] = useStateProvider();
@@ -59,21 +61,17 @@ export default function Spotify() {
           <Navbar navBackground={navBackground} />
           <div className="body__contents">
             <Routes>
+              <Route path="/" element={<Categories />} />
               <Route
-                path="/"
-                element={<Categories />}
+                path="/playlists/:id"
+                element={<CategoryPlaylistsData />}
               />
-              <Route path="/playlists/:id" element={<CategoryPlaylistsData />} />
-              <Route path="/library" element={<Body headerBackground={headerBackground}/>} />
               <Route
-                path="/s"
-                element={
-                  <Link to={`/asdasd${window.location.hash}`}>
-                    aaaaaaaaaaaaaaaaaaa
-                  </Link>
-                }
-              />{" "}
-              navigate("/asdasd")
+                path="/library"
+                element={<Body headerBackground={headerBackground} />}
+              />
+              <Route path="/search" element={<Search />} />
+              <Route path="/search/:searchvalue" element={<Search />} />
               {/* <Route path="/library" element={<Library/>}/>
                 <Route path="/library" element={<Library/>}/>
                 <Route path="/library" element={<Library/>}/>

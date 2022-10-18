@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { AiFillClockCircle } from "react-icons/ai";
 import { useStateProvider } from "../utils/StateProvider";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 import SpotifyWebApi from "spotify-web-api-node";
 import { msToMinutesAndSeconds } from "../utils/datetime-utils";
+import TrackSearchResult from "./TrackSearchResult";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "6dcd9ee75f494fa3a229e3d6f19fd4d4",
@@ -277,3 +278,6 @@ const Container = styled.div`
 //     <span className="">Podcasts</span>
 // </div>
 // </a> */}
+
+
+

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import { useEffect, useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "./TrackSearchResult";
 
@@ -18,7 +18,10 @@ const Search = () => {
   // const accessToken = useAuth(token);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  console.log(searchResults);
+  const searchInputRef = useRef();
+  const {searchvalue} = useParams();
+  // const searchValue = searchInputRef.current.value;
+
 
   useEffect(() => {
     if (!token) return;
@@ -26,11 +29,11 @@ const Search = () => {
   }, [token]);
 
   useEffect(() => {
-    if (!search) return setSearchResults([]);
+    if (!searchvalue) return setSearchResults([]);
     if (!token) return;
 
     let cancel = false;
-    spotifyApi.searchTracks(search).then((response) => {
+    spotifyApi.searchTracks(searchvalue).then((response) => {
       if (cancel) return;
       setSearchResults(
         response.body.tracks.items.map((track) => {
@@ -51,17 +54,11 @@ const Search = () => {
         })
       );
     });
-
     return () => (cancel = true);
-  }, [search]);
+   
+  }, [searchvalue]);
   return (
     <Container>
-      <input
-        type="search"
-        placeholder="Search Songs/Artists"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
       <div className="tracks">
         {searchResults.map((track) => {
           return <TrackSearchResult track={track} key={track.uri} />;
@@ -72,12 +69,13 @@ const Search = () => {
 };
 
 const Container = styled.div`
-  .tracks {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: center;
-  }
+.tracks {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+}
 `;
+
 
 export default Search;

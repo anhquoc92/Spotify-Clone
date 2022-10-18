@@ -23,7 +23,9 @@ export default function Sidebar() {
             <MdHomeFilled />
             <span>Home</span>
           </li>
-          <li>
+          <li onClick={() => {
+                  navigate(`/search${window.location.hash}`);
+                }}>
             <MdSearch />
             <span>Search</span>
           </li>

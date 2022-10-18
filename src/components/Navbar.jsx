@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
@@ -6,6 +6,8 @@ import { useStateProvider } from "../utils/StateProvider";
 import { useEffect, useState } from "react";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "./TrackSearchResult";
+import { useNavigate } from "react-router-dom";
+
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "6dcd9ee75f494fa3a229e3d6f19fd4d4",
@@ -14,65 +16,9 @@ const spotifyApi = new SpotifyWebApi({
 export default function Navbar(navBackground) {
   const [{ userInfo }] = useStateProvider();
   const [{ token }, dispatch] = useStateProvider();
-  // const accessToken = useAuth(token);
-  const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [clicked, setClicked] = useState(false);
-
-  const Search = () => {
-    const [{ token }, dispatch] =
-      useStateProvider();
-  
-    useEffect(() => {
-      if (!token) return;
-      spotifyApi.setAccessToken(token);
-    }, [token]);
-  
-    useEffect(() => {
-      if (!search) return setSearchResults([]);
-      if (!token) return;
-  
-      let cancel = false;
-      spotifyApi.searchTracks(search).then((response) => {
-        if (cancel) return;
-        setSearchResults(
-          response.body.tracks.items.map((track) => {
-            const smallestAlbumImage = track.album.images.reduce(
-              (smallest, image) => {
-                if (image.height < smallest.height) return image;
-                return smallest;
-              },
-              track.album.images[0]
-            );
-  
-            return {
-              artist: track.artists[0].name,
-              title: track.name,
-              uri: track.uri,
-              albumUrl: smallestAlbumImage.url,
-            };
-          })
-        );
-      });
-  
-      return () => (cancel = true);
-    }, [search]);
-    return (
-      <Container>
-        <input
-          type="search"
-          placeholder="Search Songs/Artists"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <div className="tracks">
-          {searchResults.map((track) => {
-            return <TrackSearchResult track={track} key={track.uri} />;
-          })}
-        </div>
-      </Container>
-    );
-  };
+  const navigate = useNavigate();
+  const searchInputRef = useRef();
 
   const userProfileDisplay = () => {
     setClicked(!clicked)
@@ -80,15 +26,21 @@ export default function Navbar(navBackground) {
 
   return (
     <Container navBackground={navBackground}>
-      <div className="search__bar">
+      <form className="search__bar"  onSubmit={(e)=> {
+        e.preventDefault()
+        navigate(`/search/${searchInputRef.current.value}${window.location.hash}`)
+      }}
+        > 
         <FaSearch />
         <input
           type="text"
           placeholder="Artists, Songs, or Podcasts"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          ref={searchInputRef}
+          // value={search}
+          // onChange={(e) => setSearch(e.target.value)}
         />
-      </div>
+        <input type="submit" hidden />
+      </form>
       <div className="avatar"  onClick={userProfileDisplay}>
         {!clicked ? <div >
           <div className="profile-button">
