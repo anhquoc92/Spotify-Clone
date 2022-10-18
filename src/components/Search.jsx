@@ -5,16 +5,16 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "./TrackSearchResult";
+import PostData from "../search/Search.json";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "6dcd9ee75f494fa3a229e3d6f19fd4d4",
 });
 
 const Search = () => {
-  const [{ token }, dispatch] =
-    useStateProvider();
+  const [{ token }, dispatch] = useStateProvider();
   const [searchResults, setSearchResults] = useState([]);
-  const {searchvalue} = useParams();
+  const { searchvalue } = useParams();
 
   useEffect(() => {
     if (!token) return;
@@ -48,7 +48,6 @@ const Search = () => {
       );
     });
     return () => (cancel = true);
-   
   }, [searchvalue, token]);
   return (
     <Container>
@@ -62,13 +61,12 @@ const Search = () => {
 };
 
 const Container = styled.div`
-.tracks {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
-}
+  .tracks {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+  }
 `;
-
 
 export default Search;

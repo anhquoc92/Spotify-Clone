@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
 export default function LikeSong() {
+  const navigate = useNavigate()
   return (
     <Container>
       <div className="full-body">
@@ -21,7 +24,7 @@ export default function LikeSong() {
             <h1 style={{fontSize: "60px", color:"white"}}>Songs you like will appear here</h1>
             <br/>
             <h2 style={{fontSize: "20px", color:"white"}}>Save songs by tapping the heart icon.</h2>
-            <button className="find-song"><strong>Find Songs</strong></button>
+            <button className="find-song" onClick={() => {navigate('/search')}}><strong>Find Songs</strong></button>
           </div>
         </div>
       </div>

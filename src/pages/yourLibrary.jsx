@@ -45,7 +45,7 @@ export default function Library() {
         {library.map(({ name, id, images }) => {
           console.log(library)
           return (
-            <div className="header" onClick={() => navigate(`/${selectedPlaylistId}`)}>
+            <div className="header" onClick={() => navigate(`/yourlibrary/${selectedPlaylistId}`)}>
               <div className="card" onClick ={() => changeCurrentPlaylist(id)}> 
                 <span
                   className="component-header"

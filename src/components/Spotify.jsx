@@ -19,13 +19,12 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 // phần làm route
-import {Routes, Route} from "react-router-dom";
-import Library from "../pages/yourLibrary";
-import LikeSong from "../pages/likedSong";
-import ListSearch  from "../search/searchList";
+import Library from "../pages/YourLibrary";
+import LikeSong from "../pages/LikedSong";
+import ListSearch  from "../search/SearchList";
 import CategoryPlaylistsData from "./CategoriesPlaylists";
 import Search from "./Search";
-import TrackSearchResult from "./TrackSearchResult";
+
 
 export default function Spotify() {
   const [{ token }, dispatch] = useStateProvider();
@@ -72,15 +71,13 @@ export default function Spotify() {
                 element={<CategoryPlaylistsData />}
               />
               <Route
-                path="/library"
-                element={<Body headerBackground={headerBackground} />}
+                path="/yourlibrary"
+                element={<Library />}
               />
-              <Route path="/search" element={<Search />} />
+              <Route path="/yourlibrary/:playlistid" element={<Body />} />
+              <Route path="/search" element={<ListSearch />} />
               <Route path="/search/:searchvalue" element={<Search />} />
-              {/* <Route path="/library" element={<Library/>}/>
-                <Route path="/library" element={<Library/>}/>
-                <Route path="/library" element={<Library/>}/>
-                <Route path="/library" element={<Library/>}/> */}
+              <Route path="/likedsongs" element={<LikeSong />} />
             </Routes>
           </div>
         </div>

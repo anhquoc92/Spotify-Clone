@@ -27,7 +27,7 @@ import PostData from "./Search.json";
 import styled from "styled-components";
 export default function ListSearch() {
     return (
-        <div className="full-body-search">
+        <div className="full-body-search" style={{display:'flex', flexWrap:'wrap'}}>
             {PostData.data.items.map((item) => {
                         let img  = item.content.data.artwork.sources[0].url;
                         let backgroundColor = item.content.data.backgroundColor.hex;
@@ -85,7 +85,6 @@ const Container = styled.div`
         justify:center;
     }
     h6{
-        
         color: white;
         font-size: 20px;
     }

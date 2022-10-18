@@ -9,6 +9,7 @@ import { reducerCases } from "../utils/Constants";
 import SpotifyWebApi from "spotify-web-api-node";
 import { msToMinutesAndSeconds } from "../utils/datetime-utils";
 import TrackSearchResult from "./TrackSearchResult";
+import { useParams } from "react-router-dom";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "6dcd9ee75f494fa3a229e3d6f19fd4d4",
@@ -49,7 +50,7 @@ export default function Body(headerBackground) {
           track_number: track.track_number,
         })),
       };
-      console.log(selectedPlaylist);
+      // console.log(selectedPlaylist);
       dispatch({ type: reducerCases.SET_PLAYLIST, selectedPlaylist });
     };
 

@@ -4,7 +4,7 @@ import { IoLibrary } from "react-icons/io5";
 import { MdHomeFilled, MdSearch } from "react-icons/md";
 import {AiOutlineHeart} from "react-icons/ai";
 import Playlists from "./Playlists";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -28,19 +28,21 @@ export default function Sidebar() {
                   navigate(`/search${window.location.hash}`);
                 }}>
             <MdSearch />
-            <Link to ="/Search"><span>Search</span></Link>
+            <li><span>Search</span></li>
           </li>
           <li onClick={() => {
-                  navigate(`/library${window.location.hash}`);
+                  navigate(`/yourlibrary${window.location.hash}`);
                 }}>
             <IoLibrary />
-            <Link to ="/library"><span>Your Library</span></Link>
+            <span>Your Library</span>
           </li>
           <li/>
 
-          <li>
+          <li onClick={() => {
+                  navigate(`/likedsongs`);
+                }}>
             <AiOutlineHeart />
-            <Link to = "/Liked"><span>Liked Songs</span></Link>
+            <span>Liked Songs</span>
           </li>
         </ul>
       </div>
