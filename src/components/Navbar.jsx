@@ -3,19 +3,11 @@ import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { useStateProvider } from "../utils/StateProvider";
-import { useEffect, useState } from "react";
-import SpotifyWebApi from "spotify-web-api-node";
-import TrackSearchResult from "./TrackSearchResult";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
-const spotifyApi = new SpotifyWebApi({
-  clientId: "6dcd9ee75f494fa3a229e3d6f19fd4d4",
-});
 
 export default function Navbar(navBackground) {
   const [{ userInfo }] = useStateProvider();
-  const [{ token }, dispatch] = useStateProvider();
   const [clicked, setClicked] = useState(false);
   const navigate = useNavigate();
   const searchInputRef = useRef();
@@ -36,8 +28,6 @@ export default function Navbar(navBackground) {
           type="text"
           placeholder="Artists, Songs, or Podcasts"
           ref={searchInputRef}
-          // value={search}
-          // onChange={(e) => setSearch(e.target.value)}
         />
         <input type="submit" hidden />
       </form>

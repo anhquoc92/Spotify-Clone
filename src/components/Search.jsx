@@ -1,10 +1,8 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
-import axios from "axios";
-import { reducerCases } from "../utils/Constants";
 import { useStateProvider } from "../utils/StateProvider";
 import { useEffect, useState } from "react";
-import { Form, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "./TrackSearchResult";
 
@@ -15,13 +13,8 @@ const spotifyApi = new SpotifyWebApi({
 const Search = () => {
   const [{ token }, dispatch] =
     useStateProvider();
-  // const accessToken = useAuth(token);
-  const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const searchInputRef = useRef();
   const {searchvalue} = useParams();
-  // const searchValue = searchInputRef.current.value;
-
 
   useEffect(() => {
     if (!token) return;
@@ -56,7 +49,7 @@ const Search = () => {
     });
     return () => (cancel = true);
    
-  }, [searchvalue]);
+  }, [searchvalue, token]);
   return (
     <Container>
       <div className="tracks">

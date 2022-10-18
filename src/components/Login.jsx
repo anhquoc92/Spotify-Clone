@@ -4,7 +4,9 @@ import LoginAcc from "./LoginAcc";
 
 export default function Login() {
   const handleClick = () => {
-    const clientId = "6dcd9ee75f494fa3a229e3d6f19fd4d4"; //6dcd9ee75f494fa3a229e3d6f19fd4d4-Quoc1 f6464f2b39f04c4fa11e11d2157545db-Minh2 e585ef943fd349f9884ddd3b7a4c7cf1-Minh
+    //     dn.minh.x@gmail.com
+    // Zxc123!@#
+    const clientId = "f6464f2b39f04c4fa11e11d2157545db"; //6dcd9ee75f494fa3a229e3d6f19fd4d4-Quoc1 f6464f2b39f04c4fa11e11d2157545db-Minh2 e585ef943fd349f9884ddd3b7a4c7cf1-Minh
     const redirectUrl = "http://localhost:3000/";
     const apiUrl = "http://accounts.spotify.com/authorize";
     const scope = [
@@ -17,8 +19,9 @@ export default function Login() {
       "user-read-playback-position",
       "user-top-read",
     ];
-    window.location.href = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(" ")}&response_type=token&show_daialog=true`;
-    // localStorage.setItem("rawToken",`${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(" ")}&response_type=token&show_daialog=true`)
+    window.location.href = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(
+      " "
+    )}&response_type=token&show_daialog=true`;
   };
   return (
     <Container>
